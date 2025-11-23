@@ -84,7 +84,8 @@ if __name__ == "__main__":
             os.makedirs(opt.checkpoints_dir)
         print("No checkpoints found!!, Retraining started... ")
     else:
-        pth = opt.checkpoints_dir + "net_" + str(check_point) + ".pt"
+        # pth = opt.checkpoints_dir + "net_" + str(check_point) + ".pt"
+        pth = "SRNet_model_weights.pt"
         ckpt = torch.load(pth)
         START_EPOCH = ckpt["epoch"] + 1
         model.load_state_dict(ckpt["model_state_dict"])
