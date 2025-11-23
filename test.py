@@ -7,8 +7,10 @@ from model.model import Srnet
 
 TEST_BATCH_SIZE = 40
 
-COVER_PATH = "/Users/dmitryhoma/Projects/phd_dissertation/state_3/INATNet/data/GBRASNET/BOSSbase-1.01-div/cover/val"
-STEGO_PATH = "/Users/dmitryhoma/Projects/phd_dissertation/state_3/INATNet/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val"
+# COVER_PATH = "/Users/dmitryhoma/Projects/phd_dissertation/state_3/INATNet/data/GBRASNET/BOSSbase-1.01-div/cover/val"
+COVER_PATH = "~/data/GBRASNET/BOSSbase-1.01-div/cover/val"
+# STEGO_PATH = "/Users/dmitryhoma/Projects/phd_dissertation/state_3/INATNet/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val"
+STEGO_PATH = "~/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val"
 CHKPT = "./checkpoints/Srnet_model_weights.pt"
 
 # Fixed: Add wildcard pattern to match image files
