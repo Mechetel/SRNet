@@ -11,7 +11,7 @@ TEST_BATCH_SIZE = 40
 COVER_PATH = "~/data/GBRASNET/BOSSbase-1.01-div/cover/val"
 # STEGO_PATH = "/Users/dmitryhoma/Projects/phd_dissertation/state_3/INATNet/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val"
 STEGO_PATH = "~/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val"
-CHKPT = "./checkpoints/Srnet_model_weights.pt"
+CHKPT = "./checkpoints/SRNet_model_weights.pt"
 
 # Fixed: Add wildcard pattern to match image files
 cover_image_names = glob(f"{COVER_PATH}/*.pgm") or glob(f"{COVER_PATH}/*.png") or glob(f"{COVER_PATH}/*")
@@ -26,13 +26,11 @@ stego_labels = np.ones((len(stego_image_names)))
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = Srnet().to(device)
-ckpt = torch.load(CHKPT, map_location=device)
+ckpt = torch.load(CHKPT, map_location=device, weights_only=False)
 model.load_state_dict(ckpt["model_state_dict"])
-
 # pylint: disable=E1101
 images = torch.empty((TEST_BATCH_SIZE, 1, 256, 256), dtype=torch.float)
 # pylint: enable=E1101
-
 test_accuracy = []
 
 for idx in range(0, len(cover_image_names), TEST_BATCH_SIZE // 2):
@@ -41,9 +39,9 @@ for idx in range(0, len(cover_image_names), TEST_BATCH_SIZE // 2):
 
     batch = []
     batch_labels = []
+
     xi = 0
     yi = 0
-
     for i in range(2 * len(cover_batch)):
         if i % 2 == 0:
             batch.append(stego_batch[xi])
@@ -53,17 +51,15 @@ for idx in range(0, len(cover_image_names), TEST_BATCH_SIZE // 2):
             batch.append(cover_batch[yi])
             batch_labels.append(0)
             yi += 1
-
     # pylint: disable=E1101
-    for i in range(len(batch)):  # Fixed: use len(batch) instead of TEST_BATCH_SIZE
-        images[i, 0, :, :] = torch.tensor(io.imread(batch[i]), dtype=torch.float).to(device)
-
-    image_tensor = images[:len(batch)].to(device)  # Fixed: only use filled portion
+    for i in range(TEST_BATCH_SIZE):
+        images[i, 0, :, :] = torch.tensor(io.imread(batch[i])).to(device)
+    image_tensor = images.to(device)
     batch_labels = torch.tensor(batch_labels, dtype=torch.long).to(device)
     # pylint: enable=E1101
-
     outputs = model(image_tensor)
     prediction = outputs.data.max(1)[1]
+
     accuracy = (
         prediction.eq(batch_labels.data).sum()
         * 100.0
@@ -71,4 +67,4 @@ for idx in range(0, len(cover_image_names), TEST_BATCH_SIZE // 2):
     )
     test_accuracy.append(accuracy.item())
 
-print(f"test_accuracy = {sum(test_accuracy)/len(test_accuracy):.2f}")
+print(f"test_accuracy = {sum(test_accuracy)/len(test_accuracy):%.2f}")
