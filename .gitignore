@@ -1,3 +1,5 @@
 __pycache__/
 *.log
-*/**/SRNet_model_weights.pt
+v1/checkpoints/net_1.pt
+v1/checkpoints/SRNet_model_weights.pt
+v2/checkpoints/SRNet_model_weights.pt
