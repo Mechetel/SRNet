@@ -1,2 +1,3 @@
 __pycache__/
 *.log
+SRNet_model_weights.pt
