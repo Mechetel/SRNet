@@ -1,14 +1,10 @@
-""" This module creates SRNet model."""
-import torch
-from torch import Tensor
-from torch import nn
-
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class Srnet(nn.Module):
+    """Original SRNet architecture"""
     def __init__(self):
         super(Srnet, self).__init__()
         # Layer 1
@@ -83,16 +79,15 @@ class Srnet(nn.Module):
         self.bn112 = nn.BatchNorm2d(256)
         self.layer113 = nn.Conv2d(in_channels=256, out_channels=256,kernel_size=3, stride=1, padding=1, bias=False)
         self.bn113 = nn.BatchNorm2d(256)
-        self.pool3 = nn.AvgPool2d(kernel_size=3, stride=2, padding=1)
 
         # Layer 12
         self.layer121 = nn.Conv2d(in_channels=256, out_channels=512,kernel_size=3, stride=2, padding=0, bias=False)
         self.bn121 = nn.BatchNorm2d(512)
         self.layer122 = nn.Conv2d(in_channels=512, out_channels=512,kernel_size=3, stride=1, padding=1, bias=False)
         self.bn122 = nn.BatchNorm2d(512)
-        # avgp = torch.mean() in forward before fc
+
         # Fully Connected layer
-        self.fc = nn.Linear(512*1*1, 2)
+        self.fc = nn.Linear(512, 2)
 
     def forward(self, inputs):
         # Layer 1
@@ -184,12 +179,9 @@ class Srnet(nn.Module):
         conv2 = self.layer122(actv1)
         bn = self.bn122(conv2)
 
-        # print("L12:",res.shape)
         avgp = torch.mean(bn, dim=(2,3), keepdim=True)
-        # fully connected
         flatten = avgp.view(avgp.size(0),-1)
-        # print("flatten:", flatten.shape)
         fc = self.fc(flatten)
-        # print("FC:",fc.shape)
         out = F.log_softmax(fc, dim=1)
         return fc
+

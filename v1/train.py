@@ -68,8 +68,8 @@ if __name__ == "__main__":
     model = model.apply(weights_init)
 
     # Loss function and Optimizer
-    loss_fn = nn.NLLLoss()
-    optimizer = torch.optim.Adamax(
+    loss_fn = nn.BCELoss()
+    optimizer = torch.optim.Adam(
         model.parameters(),
         lr=opt.lr,
         betas=(0.9, 0.999),
@@ -84,9 +84,8 @@ if __name__ == "__main__":
             os.makedirs(opt.checkpoints_dir)
         print("No checkpoints found!!, Retraining started... ")
     else:
-        # pth = opt.checkpoints_dir + "net_" + str(check_point) + ".pt"
-        pth = "SRNet_model_weights.pt"
-        ckpt = torch.load(pth)
+        pth = opt.checkpoints_dir + "net_" + str(check_point) + ".pt"
+        ckpt = torch.load(pth, map_location=device, weights_only=False)
         START_EPOCH = ckpt["epoch"] + 1
         model.load_state_dict(ckpt["model_state_dict"])
         optimizer.load_state_dict(ckpt["optimizer_state_dict"])

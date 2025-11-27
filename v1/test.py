@@ -11,6 +11,8 @@ TEST_BATCH_SIZE = 40
 # Expand home directory
 COVER_PATH = os.path.expanduser("~/data/GBRASNET/BOSSbase-1.01-div/cover/val")
 STEGO_PATH = os.path.expanduser("~/data/GBRASNET/BOSSbase-1.01-div/stego/S-UNIWARD/0.4bpp/stego/val")
+COVER_PATH = os.path.expanduser("/Users/dmitryhoma/Projects/datasets/ready_to_use/GBRASNET/BOWS2/cover/test")
+STEGO_PATH = os.path.expanduser("/Users/dmitryhoma/Projects/datasets/ready_to_use/GBRASNET/BOWS2/stego/WOW/0.2bpp/test")
 CHKPT = "./checkpoints/SRNet_model_weights.pt"
 
 # Load image paths - try multiple extensions
